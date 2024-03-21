@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func start() {
+func start(cfg *Config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex> ")
@@ -21,13 +21,13 @@ func start() {
 			continue
 		}
 		if cmd, ok := getCommands()[line[0]]; ok {
-			err := cmd.callback()
+			err := cmd.callback(cfg)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
 		} else {
 			fmt.Println("Unknown command")
-			err := getCommands()["help"].callback()
+			err := getCommands()["help"].callback(cfg)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
@@ -39,7 +39,13 @@ func start() {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*Config) error
+}
+
+type Config struct {
+	pokeapiClient Client
+	next          *string
+	prev          *string
 }
 
 func cleanInput(input string) []string {
@@ -61,6 +67,16 @@ func getCommands() map[string]cliCommand {
 			name:        "exit",
 			description: "Exits the Pokedex",
 			callback:    commandExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Displays names of 20 location areas",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "map back",
+			description: "Displays names of the previous 20 location areas",
+			callback:    commandMapb,
 		},
 	}
 }
