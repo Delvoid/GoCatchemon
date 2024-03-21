@@ -17,6 +17,9 @@ func start() {
 		}
 
 		line := cleanInput(scanner.Text())
+		if len(line) == 0 {
+			continue
+		}
 		if cmd, ok := getCommands()[line[0]]; ok {
 			err := cmd.callback()
 			if err != nil {
