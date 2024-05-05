@@ -8,7 +8,7 @@ import (
 
 func commandCatch(cfg *Config, args ...string) error {
 	if len(args) != 1 {
-		return errors.New("you must provide a pokemon name")
+		return errors.New("usage: catch <pokemon>")
 	}
 
 	name := args[0]
@@ -26,6 +26,7 @@ func commandCatch(cfg *Config, args ...string) error {
 	}
 
 	fmt.Printf("%s was caught!\n", pokemon.Name)
+	fmt.Printf("You may now inspect %s with the inspect command\n", pokemon.Name)
 
 	cfg.caughtPokemon[pokemon.Name] = pokemon
 	return nil
