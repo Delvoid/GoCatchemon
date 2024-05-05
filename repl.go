@@ -51,6 +51,7 @@ type Config struct {
 	pokeapiClient Client
 	next          *string
 	prev          *string
+	caughtPokemon map[string]Pokemon
 }
 
 func cleanInput(input string) []string {
@@ -87,6 +88,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore <location-name>",
 			description: "Displays names of pokemon in a location area",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <pokemon-name>",
+			description: "Throw a Pokeball at a pokemon",
+			callback:    commandCatch,
 		},
 	}
 }
