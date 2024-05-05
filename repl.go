@@ -16,12 +16,17 @@ func start(cfg *Config) {
 			return
 		}
 
-		line := cleanInput(scanner.Text())
-		if len(line) == 0 {
+		words := cleanInput(scanner.Text())
+		if len(words) == 0 {
 			continue
 		}
-		if cmd, ok := getCommands()[line[0]]; ok {
-			err := cmd.callback(cfg)
+		commandName := words[0]
+		args := []string{}
+		if len(words) > 1 {
+			args = words[1:]
+		}
+		if cmd, ok := getCommands()[commandName]; ok {
+			err := cmd.callback(cfg, args...)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
@@ -39,7 +44,7 @@ func start(cfg *Config) {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*Config) error
+	callback    func(*Config, ...string) error
 }
 
 type Config struct {
@@ -77,6 +82,11 @@ func getCommands() map[string]cliCommand {
 			name:        "map back",
 			description: "Displays names of the previous 20 location areas",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore <location-name>",
+			description: "Displays names of pokemon in a location area",
+			callback:    commandExplore,
 		},
 	}
 }
